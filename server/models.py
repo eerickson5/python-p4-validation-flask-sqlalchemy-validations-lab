@@ -71,6 +71,16 @@ class Post(db.Model):
     def validates_title(self, key, address):
         if not address or len(address) == 0:
             raise ValueError("Invalid title.")
+        
+        required = {"Won't Believe", "Secret", "Top", "Guess"}
+        has_required = False
+        for pattern in required:
+            if pattern in address:
+                has_required = True
+        if has_required:
+            return address
+        else:
+            raise ValueError("Not exciting enough")
 
     def __repr__(self):
         return f'Post(id={self.id}, title={self.title} content={self.content}, summary={self.summary})'
