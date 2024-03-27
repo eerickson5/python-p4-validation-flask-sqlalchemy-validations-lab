@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
+import re
 db = SQLAlchemy()
 
 class Author(db.Model):
@@ -20,6 +21,13 @@ class Author(db.Model):
             raise ValueError("Class Author in models.py requires each record to have a unique name")
         return address
 
+    @validates("phone_number")
+    def validate_phone(self, key, address):
+        regex = re.compile(r"^[0-9]{10}$")
+        if re.match(regex, address):
+            return address
+        else:
+            raise ValueError("Invalid phone number")
 
 
     def __repr__(self):
