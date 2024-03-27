@@ -45,7 +45,32 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     # Add validators  
-
+    @validates("content")
+    def validates_content(self, key, address):
+        if len(address) < 250:
+            raise ValueError("Content too short")
+        else:
+            return address
+        
+    @validates("summary")
+    def validates_summary(self, key, address):
+        if len(address) > 250:
+            raise ValueError("Summary too long")
+        else:
+            return address
+        
+    @validates("category")
+    def validates_category(self, key, address):
+        valid = {"Fiction", "Non-Fiction"}
+        if address not in valid:
+            raise ValueError("Invalid category.")
+        else:
+            return address
+        
+    @validates("title")
+    def validates_title(self, key, address):
+        if not address or len(address) == 0:
+            raise ValueError("Invalid title.")
 
     def __repr__(self):
         return f'Post(id={self.id}, title={self.title} content={self.content}, summary={self.summary})'
