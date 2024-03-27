@@ -11,7 +11,16 @@ class Author(db.Model):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    # Add validators 
+    @validates("name")
+    def validate_name(self, key, address):
+        if address == None or len(address) < 1:
+            raise ValueError("Authors need names.")
+        currently_named = Author.query.filter(Author.name == address).first()
+        if currently_named:
+            raise ValueError("Class Author in models.py requires each record to have a unique name")
+        return address
+
+
 
     def __repr__(self):
         return f'Author(id={self.id}, name={self.name})'
